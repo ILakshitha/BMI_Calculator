@@ -11,6 +11,7 @@ class Mainpage extends StatefulWidget {
 class _MainpageState extends State<Mainpage> {
   int height = 176;
   int weight = 50;
+  late double bmi = calculateBMI(height: height, weight: weight);
 
   @override
   Widget build(BuildContext context) {
@@ -18,9 +19,9 @@ class _MainpageState extends State<Mainpage> {
       body: SafeArea(
         child: Container(
           color: Colors.white,
-          child: const Column(
+          child: Column(
             children: [
-              Row(
+              const Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   Padding(
@@ -49,22 +50,22 @@ class _MainpageState extends State<Mainpage> {
                   ),
                 ],
               ),
-              SizedBox(
+              const SizedBox(
                 height: 50,
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   Padding(
-                    padding: EdgeInsets.all(15.0),
+                    padding: const EdgeInsets.all(15.0),
                     child: Column(
                       children: [
-                        Text("Height", style: kr1text),
+                        const Text("Height", style: kr1text),
                         Padding(
-                          padding: EdgeInsets.all(10.0),
+                          padding: const EdgeInsets.all(10.0),
                           child: Text(
-                            "176",
-                            style: TextStyle(
+                            "$height",
+                            style: const TextStyle(
                               color: Colors.blue,
                               fontSize: 50,
                               fontWeight: FontWeight.bold,
@@ -74,23 +75,35 @@ class _MainpageState extends State<Mainpage> {
                         Row(
                           children: [
                             FloatingActionButton(
-                              onPressed: null,
-                              child: Icon(
+                              onPressed: () {
+                                setState(() {
+                                  if (height > 50) height--;
+                                });
+
+                                print(height);
+                              },
+                              child: const Icon(
                                 Icons.remove,
                                 size: 40,
                               ),
-                              //backgroundColor: Colors.amber,
+                              backgroundColor: Colors.amber,
                             ),
-                            SizedBox(
+                            const SizedBox(
                               width: 10,
                             ),
                             FloatingActionButton(
-                              onPressed: null,
-                              child: Icon(
+                              onPressed: () {
+                                setState(() {
+                                  if (height < 220) height++;
+                                });
+
+                                print(height);
+                              },
+                              child: const Icon(
                                 Icons.add,
                                 size: 40,
                               ),
-                              //backgroundColor: Colors.amber,
+                              backgroundColor: Colors.amber,
                             ),
                           ],
                         )
@@ -106,28 +119,42 @@ class _MainpageState extends State<Mainpage> {
                             Text("weight", style: kr1text),
                             Padding(
                               padding: EdgeInsets.all(10.0),
-                              child: Text("76", style: kr2c2),
+                              child: Text("$weight", style: kr2c2),
                             ),
                             Row(
                               children: [
                                 FloatingActionButton(
-                                  onPressed: null,
+                                  onPressed: () {
+                                    setState(() {
+                                      if (weight > 20) weight--;
+                                    });
+
+                                    print(height);
+                                  },
                                   child: Icon(
                                     Icons.remove,
                                     size: 40,
                                   ),
-                                  // backgroundColor: ktextcolor,
+                                  backgroundColor: ktextcolor,
                                 ),
                                 SizedBox(
                                   width: 10,
                                 ),
                                 FloatingActionButton(
-                                  onPressed: null,
+                                  onPressed: () {
+                                    setState(() {
+                                      if (weight < 150) weight++;
+                                      //bmi = calculateBMI(
+                                      // height: height, weight: weight);
+                                    });
+
+                                    print(height);
+                                  },
                                   child: Icon(
                                     Icons.add,
                                     size: 40,
                                   ),
-                                  //backgroundColor: Colors.amber,
+                                  backgroundColor: Colors.amber,
                                 ),
                               ],
                             )
@@ -138,8 +165,20 @@ class _MainpageState extends State<Mainpage> {
                   ),
                 ],
               ),
-              SizedBox(
+              Container(
                 height: 100,
+                width: 200,
+                child: FloatingActionButton(
+                  onPressed: () {
+                    setState(() {
+                      bmi = calculateBMI(height: height, weight: weight);
+                    });
+                  },
+                  child: Text(
+                    "Calculate",
+                    style: kr1text,
+                  ),
+                ),
               ),
               Column(
                 children: [
@@ -148,15 +187,23 @@ class _MainpageState extends State<Mainpage> {
                     style: TextStyle(
                       fontSize: 80,
                       color: Colors.blue,
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
                   Text(
-                    "120",
+                    bmi.toStringAsFixed(2),
                     style: TextStyle(
                       fontSize: 50,
                       color: Colors.black,
                     ),
                   ),
+                  Text(
+                    getResult(),
+                    style: TextStyle(
+                      color: Colors.red,
+                      fontSize: 30,
+                    ),
+                  )
                 ],
               ),
             ],
@@ -166,7 +213,17 @@ class _MainpageState extends State<Mainpage> {
     );
   }
 
-  /*void call() {
-    print("object");
-  }*/
+  double calculateBMI({required int height, required int weight}) {
+    return (weight / (height * height)) * 10000;
+  }
+
+  String getResult() {
+    if (bmi >= 25) {
+      return 'Overweight';
+    } else if (bmi > 18.5) {
+      return 'Normal';
+    } else {
+      return 'Underweight';
+    }
+  }
 }
